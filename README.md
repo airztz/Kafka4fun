@@ -7,7 +7,7 @@ Quickstart
 
 Import produce-streaming-consume-web as Maven project into Eclipse.
 
-Within KafkaConfiguration.java, change urls of kafka bootstrap brokers.
+Within KafkaConfiguration.java, change urls for your own kafka bootstrap brokers.
 
 Then simply run Application.java.
 
