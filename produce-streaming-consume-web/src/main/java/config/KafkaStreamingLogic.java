@@ -12,16 +12,16 @@ import org.apache.kafka.streams.kstream.KeyValueMapper;
 import org.apache.kafka.streams.kstream.ValueMapper;
 
 public class KafkaStreamingLogic {
-	public static KStreamBuilder TputByMarket_LogicBuilder(String intputTopic, String outputTopic){
+	public static KStreamBuilder TputByMarket_LogicBuilder(String intputTopic, String outputTopic) {
 		final FractionSerializer FractionSerializer = new FractionSerializer();
 		final FractionDeserializer FractionDeserializer = new FractionDeserializer();
 		final Serde<Fraction> FractionSerde = Serdes.serdeFrom(FractionSerializer, FractionDeserializer);
 		KStreamBuilder builder = new KStreamBuilder();
-		KStream<String, String> inputRecord = builder.stream(intputTopic);//read input stream
+		KStream<String, String> inputRecord = builder.stream(intputTopic);
 		KTable<String, String> marketUserTput = inputRecord
 				.filter((recordKey,
 						recordValue) -> (recordValue.length() > 0 && !recordValue.equals("") && recordValue != null))
-				.map(new KeyValueMapper<String, String, KeyValue<String, String>>() {//set key to Date:" + recordKey + "_Region:" + region + "_Market:" + market, and set record value to EUCELL_DL_TPUT_NUM_KBITS	EUCELL_DL_TPUT_DEN_SECS	EUCELL_DL_DRB_TPUT_NUM_KBITS	EUCELL_DL_DRB_TPUT_DEN_SECS  
+				.map(new KeyValueMapper<String, String, KeyValue<String, String>>() {
 					@Override
 					public KeyValue<String, String> apply(String recordKey, String recordValue) {
 						int comma = 0, walker = 0, runner = -1;
@@ -68,22 +68,23 @@ public class KafkaStreamingLogic {
 					public Fraction apply(String recordKey, String recordValue, Fraction aggregate) {
 						String[] record = recordValue.split(",");
 						Double EUCELL_DL_TPUT_NUM_KBITS = 0.0;
-						Double EUCELL_DL_TPUT_DEN_SECS  = 0.0;
-						if(record.length!=0){
+						Double EUCELL_DL_TPUT_DEN_SECS = 0.0;
+						if (record.length != 0) {
 							EUCELL_DL_TPUT_NUM_KBITS = Double.parseDouble(record[0]);
-							EUCELL_DL_TPUT_DEN_SECS = Double.parseDouble(record[1]);	
+							EUCELL_DL_TPUT_DEN_SECS = Double.parseDouble(record[1]);
 						}
 						aggregate.count++;
 						aggregate.numerator += EUCELL_DL_TPUT_NUM_KBITS;
 						aggregate.denominator += EUCELL_DL_TPUT_DEN_SECS;
 						return aggregate;
 					}
-				}, FractionSerde)
-				.mapValues(new ValueMapper<Fraction, String>() {
+				}, FractionSerde).mapValues(new ValueMapper<Fraction, String>() {
 					@Override
 					public String apply(Fraction aggregate) {
-						return "{\"count\":\"" + aggregate.count + "\", \"UTput\":\"" + (aggregate.numerator / aggregate.denominator) + "\"}";
-						//return "count:" + aggregate.count + " UTput:" + (aggregate.numerator / aggregate.denominator);
+						return "{\"count\":\"" + aggregate.count + "\", \"UTput\":\""
+								+ (aggregate.numerator / aggregate.denominator) + "\"}";
+						// return "count:" + aggregate.count + " UTput:" +
+						// (aggregate.numerator / aggregate.denominator);
 					}
 				});
 		marketUserTput.to(Serdes.String(), Serdes.String(), outputTopic);
