@@ -1,4 +1,4 @@
-package MyWebSocket1.WS1;
+package test;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
