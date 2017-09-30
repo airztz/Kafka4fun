@@ -28,7 +28,7 @@ public class Demo {
 		props.put("buffer.memory", 33554432);
 		props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
 		props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-		// sent data to kafkatopic streams-file-input:
+		// sent data to kafka topic "streams-file-input":
 		KafkaProducerRunner ProducerRunner = new KafkaProducerRunner(props, intputTopic);
 		new Thread(ProducerRunner).start(); //producer will close after finished reading the input
 
