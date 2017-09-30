@@ -16,6 +16,7 @@ import config.KafkaStreamingLogic;
 public class Demo {
 	
 	public static void runDemo(String intputTopic, String outputTopic) throws InterruptedException{
+		
 		// Producer Demo
 		Properties props = new Properties();
 		props.put("bootstrap.servers", KafkaConfiguration.BrokerURL);	
@@ -30,13 +31,11 @@ public class Demo {
 		// sent data to kafkatopic streams-file-input:
 		KafkaProducerRunner ProducerRunner = new KafkaProducerRunner(props, intputTopic);
 		new Thread(ProducerRunner).start(); //producer will close after finished reading the input
-		// while(ProducerRunner.getStatus()){
-		// continue;
-		// }
 
 		// Stream Analysis DEMO
 		
 		//Stream processing is not easy if you choose to 
+		
 		//(1) DIY: 
 		//while(consumerisRunning){
 //			message = consumer.poll();
@@ -49,7 +48,7 @@ public class Demo {
 		//How do you Partitioning the messages and Scale out your processing?
 		//How do you handle fault tolerance&re-processing the data
 		//How do you manage the state of your windowing analysis to achieve exactly-one analysis 
-
+		
 		//(2) reply on full-fledged stream processing system:
 		//Storm, Spark, Samza
 		//
@@ -58,6 +57,7 @@ public class Demo {
 		//A unique feature of the Kafka Streams API is that the applications you build with it are normal Java applications. 
 		//These applications can be packaged, deployed, and monitored like any other Java application – 
 		//there is no need to install separate processing clusters or similar special-purpose and expensive infrastructure!
+		
 		Properties config = new Properties();
 		props.put("metrics.recording.level", "DEBUG");
 		config.put(StreamsConfig.APPLICATION_ID_CONFIG, "streams-analysis");
@@ -69,14 +69,11 @@ public class Demo {
 		config.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
 		config.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
 
-		// use three stream client to analysis
+		// use 1 stream client with 6 threads to analysis
 		KStreamBuilder builder = KafkaStreamingLogic.TputByMarket_LogicBuilder(intputTopic,outputTopic);
 		KafkaStreams streams1 = new KafkaStreams(builder, config);
 		streams1.cleanUp();
 		streams1.start();
-		//KafkaStreams streams2 = new KafkaStreams(builder, config);
-		//streams2.start();
-		//TimeUnit.MILLISECONDS.sleep(10 * 1000);
 		
 		// CONSUMER DEMO
 		props = new Properties();
@@ -90,9 +87,9 @@ public class Demo {
 		props.put("auto.offset.reset", "latest");	
 		props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
 		props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-		// use two consumer clients to consume
-		boolean sentToWebSocket = false;
-		sentToWebSocket = true;
+		// use three consumers clients to consume
+		boolean sentToWebSocket = true;
+		//sentToWebSocket = false;
 		KafkaConsumerRunner ConsumerRunner1 = new KafkaConsumerRunner(props, outputTopic, sentToWebSocket);
 		KafkaConsumerRunner ConsumerRunner2 = new KafkaConsumerRunner(props, outputTopic, sentToWebSocket);
 		KafkaConsumerRunner ConsumerRunner3 = new KafkaConsumerRunner(props, outputTopic, sentToWebSocket);
@@ -101,15 +98,13 @@ public class Demo {
 		new Thread(ConsumerRunner3).start();
 		
 		TimeUnit.MILLISECONDS.sleep(1000 * 1000);
+		
 		ProducerRunner.getProducer().close();
 		streams1.close();
 		streams1.cleanUp();
-//		streams2.close();
-//		streams2.cleanUp();
 		ConsumerRunner1.shutdown();
 		ConsumerRunner2.shutdown();
 		ConsumerRunner3.shutdown();
-		//System.exit(0);
 	}
 	
 	
