@@ -58,20 +58,20 @@ public class Demo {
 		//These applications can be packaged, deployed, and monitored like any other Java application – 
 		//there is no need to install separate processing clusters or similar special-purpose and expensive infrastructure!
 		
-		Properties config = new Properties();
+		props = new Properties();
 		props.put("metrics.recording.level", "DEBUG");
-		config.put(StreamsConfig.APPLICATION_ID_CONFIG, "streams-analysis");
-		config.put(StreamsConfig.PROCESSING_GUARANTEE_CONFIG, "at_least_once");
-		config.put(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG, "20000");
-		config.put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, "6");//The number of threads to execute stream processing
-		config.put(StreamsConfig.POLL_MS_CONFIG, "100");//The amount of time in milliseconds to block waiting for input.
-		config.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, KafkaConfiguration.BrokerURL);
-		config.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
-		config.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
+		props.put(StreamsConfig.APPLICATION_ID_CONFIG, "streams-analysis");
+		props.put(StreamsConfig.PROCESSING_GUARANTEE_CONFIG, "at_least_once");
+		props.put(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG, "20000");
+		props.put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, "6");//The number of threads to execute stream processing
+		props.put(StreamsConfig.POLL_MS_CONFIG, "100");//The amount of time in milliseconds to block waiting for input.
+		props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, KafkaConfiguration.BrokerURL);
+		props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
+		props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
 
 		// use 1 stream client with 6 threads to analysis
-		KStreamBuilder builder = KafkaStreamingLogic.TputByMarket_LogicBuilder(intputTopic,outputTopic);
-		KafkaStreams streams1 = new KafkaStreams(builder, config);
+		KStreamBuilder LogicBuilder = KafkaStreamingLogic.TputByMarket_LogicBuilder(intputTopic,outputTopic);
+		KafkaStreams streams1 = new KafkaStreams(LogicBuilder, props);
 		streams1.cleanUp();
 		streams1.start();
 		
