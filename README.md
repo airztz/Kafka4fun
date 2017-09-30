@@ -7,13 +7,15 @@ Quickstart
 
 produce-streaming-consume-web will show you how to run Kafka a client application with functionaly like producing, real time straming analysis, consuming and realtime output in your web broswer!
 
-Import produce-streaming-consume-web as Maven project into Eclipse.
+* You will first need to have an alive kafka cluster.
 
-Within KafkaConfiguration.java, change urls for your own kafka bootstrap brokers.
+* Import produce-streaming-consume-web as Maven project into Eclipse.
 
-Then simply run Application.java.
+* Within KafkaConfiguration.java, change urls for your own kafka bootstrap brokers.
 
-Open your web browser and type in http://localhost:8080/Video_Streaming.html
+* Simply run Application.java.
+
+* Open your web browser and type in http://localhost:8080/Video_Streaming.html
 
 It is realtime!
 
