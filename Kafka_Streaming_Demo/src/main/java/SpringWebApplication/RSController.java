@@ -1,4 +1,4 @@
-package MyWebSocket1.WS1;
+package SpringWebApplication;
 
 import java.util.Properties;
 
@@ -10,20 +10,12 @@ import org.springframework.boot.json.JsonParser;
 import org.springframework.boot.json.JsonParserFactory;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.RequestBody;
-//import org.apache.kafka.clients.consumer.ConsumerConfig;
-//import org.apache.kafka.common.serialization.Serdes;
-//import org.apache.kafka.streams.KafkaStreams;
-//import org.apache.kafka.streams.KeyValue;
-//import org.apache.kafka.streams.StreamsConfig;
-//import org.apache.kafka.streams.kstream.KStreamBuilder;
-//import org.apache.kafka.streams.kstream.KStream;
-//import org.apache.kafka.streams.kstream.KTable;
-//import org.apache.kafka.streams.kstream.KeyValueMapper;
-//import org.apache.kafka.streams.kstream.ValueMapper;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import config.KafkaConfiguration;
+//this functionality is not used currently
 @RestController
 @RequestMapping(value ="/")
 public class RSController {
@@ -40,7 +32,6 @@ public class RSController {
 	private int bufferVariationDefault = 0;
 	private int bufferVariation = bufferVariationDefault; 
     private JsonParser Jparser = JsonParserFactory.getJsonParser();
-    //private KafkaConsumerRunner ConsumerRunner;
     private Producer<String, String> producer;
     
     RSController(){

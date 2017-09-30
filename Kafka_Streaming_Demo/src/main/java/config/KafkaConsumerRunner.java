@@ -1,4 +1,4 @@
-package MyWebSocket1.WS1;
+package config;
 
 import java.util.Arrays;
 import java.util.Properties;
@@ -12,13 +12,15 @@ import org.springframework.boot.json.JsonParser;
 import org.springframework.boot.json.JsonParserFactory;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
+import SpringWebApplication.WSController;
+
 public class KafkaConsumerRunner implements Runnable {
     private final AtomicBoolean closed = new AtomicBoolean(false);
     private final KafkaConsumer<String,String> consumer;
     private final Properties props;
     private final JsonParser Jparser;
     private final AtomicBoolean sentToWebSocket = new AtomicBoolean(false);
-    KafkaConsumerRunner(Properties props, String topic, boolean sentToWebSocket){
+    public KafkaConsumerRunner(Properties props, String topic, boolean sentToWebSocket){
     	this.props = props;   		
     	this.Jparser = JsonParserFactory.getJsonParser();
     	consumer = new KafkaConsumer<String,String>(props);  

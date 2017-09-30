@@ -2,12 +2,12 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>MyWebSocket1</groupId>
-	<artifactId>WS1</artifactId>
+	<groupId>Joy4fun.coding4fun</groupId>
+	<artifactId>produce-streaming-consume-web</artifactId>
 	<version>0.0.1</version>
 	<packaging>war</packaging>
 
-	<name>WS1</name>
+	<name>produce-streaming-consume-web</name>
 	<url>http://maven.apache.org</url>
 
 	<build>

@@ -1,4 +1,4 @@
-package MyWebSocket1.WS1;
+package SpringWebApplication;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;

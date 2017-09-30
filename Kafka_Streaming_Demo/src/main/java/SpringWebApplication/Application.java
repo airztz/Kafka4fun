@@ -1,4 +1,4 @@
-package MyWebSocket1.WS1;
+package SpringWebApplication;
 
 import java.io.IOException;
 
@@ -18,9 +18,7 @@ public class Application extends SpringBootServletInitializer{//for deployment/l
 	//kill `lsof -i -n -P | grep TCP | grep 4040 | tr -s " " "\n" | sed -n 2p`
     public static void main(String[] args) throws IOException, InterruptedException {	     
        SpringApplication.run(Application.class, args);
-    }
-    
-    
+    }   
 	@Bean
 	public RestTemplate InitializeRestTemplate() {
 		return new RestTemplate();
@@ -28,12 +26,7 @@ public class Application extends SpringBootServletInitializer{//for deployment/l
 	@Bean
 	public CommandLineRunner InitializeSampleProducer(RestTemplate restTemplate) throws Exception {
 		return args -> {
-			//String url = "http://localhost:8080/WS1-0.0.1/sentToKafkaTopic";
-			//url = "http://localhost:8080/sentToKafkaTopic"; //for local test run
-			//SampleProducer producerRunner = new SampleProducer(new URI(url), restTemplate);
-		    //new Thread(producerRunner).start();	
-			
-			kafkaDemo.runDemo("testInput1","testOutput1");
+			Demo.runDemo("testInput1","testOutput1");
 			System.exit(0);
 		};
 	}   

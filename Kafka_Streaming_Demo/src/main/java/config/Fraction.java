@@ -1,4 +1,4 @@
-package MyWebSocket1.WS1;
+package config;
 
 import java.nio.ByteBuffer;
 import java.util.Map;

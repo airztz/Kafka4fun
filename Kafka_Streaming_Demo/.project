@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>Kafka_Streaming_Demo</name>
+	<name>produce-streaming-consume-web</name>
 	<comment></comment>
 	<projects>
 	</projects>

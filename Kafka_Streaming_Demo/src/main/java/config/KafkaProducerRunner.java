@@ -1,4 +1,4 @@
-package MyWebSocket1.WS1;
+package config;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -15,7 +15,7 @@ public class KafkaProducerRunner implements Runnable{
 	private final Producer<String, String> producer;
 	private final String topic;
 	private boolean isRunning;
-	KafkaProducerRunner(Properties props, String Topic){
+	public KafkaProducerRunner(Properties props, String Topic){
    	 this.props = props;
 	 this.producer = new KafkaProducer<String,String>(props);
 	 this.topic = Topic;	
