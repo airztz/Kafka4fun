@@ -52,7 +52,6 @@ public class RSController {
     @RequestMapping(value ="/sentToKafkaTopic", method=RequestMethod.POST)
     public String sentToKafkaTopic(@RequestBody String jsonbody){
     	producer.send(new ProducerRecord<String, String>("test", String.valueOf(Math.random()*10),jsonbody));
-    	//producer.send(new ProducerRecord<String, String>("test", String.valueOf(Math.random()*10),"1"));
     	//this.template.convertAndSend("/topic/currentTput", currentTput); 
     	return "OK";
     }
@@ -87,13 +86,4 @@ public class RSController {
     public int getBufferVariation() {
     	return bufferVariation;
     }
-//    @RequestMapping(value ="/getPlayStatus", method=RequestMethod.GET)
-//    public String getPlayStatus() {
-////    	if(PlayStatus.size()!=0)
-////    		return PlayStatus.poll();
-//    	if(JsonMap!=null)
-//    		return JsonMap.get("currentPlayStatus").toString();
-//    	else return "NONE";
-//    }
-
 }
