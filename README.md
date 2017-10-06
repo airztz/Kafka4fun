@@ -5,7 +5,7 @@ Some Kafka demos.
 Quickstart
 ----------
 
-produce-streaming-consume-web will show you how to run a local Kafka client application with functionaly like producing, real time streaming analysis, consuming and realtime output in your web broswer!
+produce-streaming-consume-web will show you how to run a local Kafka client application with functionaly like producing, real time streaming analysis, consuming and making realtime output into your web broswer!
 
 * You will first need to have an alive kafka cluster.
 
