@@ -19,5 +19,5 @@ produce-streaming-consume-web will show you how to run a local Kafka client appl
 
 It is realtime!
 
-![img](https://s3-us-west-2.amazonaws.com/kafka-connect-sink/Screen+Shot+2017-09-30+at+5.28.03+AM.png)
+![img](https://s3-us-west-2.amazonaws.com/github-photo-links/Screen+Shot+2017-09-30+at+5.28.03+AM.png)
 
