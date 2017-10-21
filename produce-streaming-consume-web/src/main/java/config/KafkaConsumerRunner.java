@@ -3,6 +3,8 @@ package config;
 import java.util.Arrays;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicBoolean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -19,14 +21,14 @@ public class KafkaConsumerRunner implements Runnable {
 	private final KafkaConsumer<String, String> consumer;
 	private final Properties props;
 	private final JsonParser Jparser;
-	private final AtomicBoolean sentToWebSocket = new AtomicBoolean(false);
-
+	private final AtomicBoolean sentToWebSocket;
+	private final Logger log = LoggerFactory.getLogger(KafkaConsumerRunner.class);
 	public KafkaConsumerRunner(Properties props, String topic, boolean sentToWebSocket) {
 		this.props = props;
 		this.Jparser = JsonParserFactory.getJsonParser();
 		consumer = new KafkaConsumer<String, String>(props);
 		consumer.subscribe(Arrays.asList(topic));
-		this.sentToWebSocket.set(sentToWebSocket);
+		this.sentToWebSocket = new AtomicBoolean(sentToWebSocket);
 	}
 
 	@Override
@@ -40,7 +42,8 @@ public class KafkaConsumerRunner implements Runnable {
 				ConsumerRecords<String, String> records = consumer.poll(1000);
 				if (records.count() > 0) {
 					for (ConsumerRecord<String, String> record : records) {
-						System.out.printf("key = %s, value = %s\n", record.key(), record.value());
+						log.info("key = {}, value = {}", record.key(), record.value());
+						// System.out.printf("key = %s, value = %s\n", record.key(), record.value());
 						// System.out.printf("offset = %d, value = %s\n",
 						// record.offset(), record.value());
 						// Map<String, Object> JsonMap =

@@ -1,6 +1,6 @@
 var stompClient = null;
 var chartData = null;
-var markets = {"NYC Manhattan": null, "NYC East": null, "Las Vegas": null}
+var markets = {"NYC Manhattan": null, "Colorado": null, "Oregon": null}
 var subscribe_callback = function(currentTput){
 		var data = currentTput.body.split(",");		
 		var market = data[0];
@@ -37,9 +37,9 @@ var connect_callback = function(frame){
             marginRight: 10,
             events: {
                 load: function () {
-                    markets["NYC East"] = this.series[0]; 
+                    markets["Oregon"] = this.series[0]; 
                     markets["NYC Manhattan"] = this.series[1]; 
-                    markets["Las Vegas"] = this.series[2];                                      
+                    markets["Colorado"] = this.series[2];                                      
 //                    setInterval(function () {  
 //                    	var x = (new Date()).getTime();                  
 //                        series.addPoint([x, Tput], true, true);
@@ -80,7 +80,7 @@ var connect_callback = function(frame){
         },
         series: [
         {
-            name: 'NYC East Video Throughput(Mbps)',
+            name: 'Oregon Video Throughput(Mbps)',
             color: '#efeb10',   //yellow
             data: (function () {
                 // generate an array of random data for chart initialization
@@ -115,7 +115,7 @@ var connect_callback = function(frame){
             }())
         },
         {
-            name: 'Las Vegas Video Throughput(Mbps)',
+            name: 'Colorado Video Throughput(Mbps)',
             color: '#000000',     //black
             data: (function () {
                 // generate an array of random data for chart initialization
