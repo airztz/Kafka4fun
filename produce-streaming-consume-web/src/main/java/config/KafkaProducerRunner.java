@@ -68,9 +68,9 @@ public class KafkaProducerRunner implements Runnable {
 					}
 				TimeUnit.MILLISECONDS.sleep(100);
 			}
-			this.isRunning.set(false);
 			this.producer.close();
 			reader.close();
+			this.isRunning.set(false);
 			log.info("Finished reading: {}", this.source);
 		} catch (IOException | InterruptedException e) {
 			// TODO Auto-generated catch block
