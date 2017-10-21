@@ -20,6 +20,7 @@ public class KafkaProducerRunner implements Runnable {
 	private final String source;
 	private final AtomicBoolean isRunning;
 	private final Logger log = LoggerFactory.getLogger(KafkaProducerRunner.class);
+	
 	public KafkaProducerRunner(Properties props, String Topic, String Source) {
 		this.props = props;
 		this.producer = new KafkaProducer<String, String>(props);
