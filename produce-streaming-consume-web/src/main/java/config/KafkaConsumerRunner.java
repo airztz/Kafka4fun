@@ -1,5 +1,6 @@
 package config;
 
+import java.util.*;
 import java.util.Arrays;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -38,10 +39,14 @@ public class KafkaConsumerRunner implements Runnable {
 			// TopicPartition partition = new TopicPartition("test", 0);
 			// consumer.assign(Arrays.asList(partition));
 			// consumer.seek(partition, 0);
+			Set<String> recordKey = new HashSet<String>();
 			while (!closed.get()) {
 				ConsumerRecords<String, String> records = consumer.poll(1000);
 				if (records.count() > 0) {
-					for (ConsumerRecord<String, String> record : records) {
+					recordKey.clear();
+					log.info("numbers of record per second = {}",records.count());
+					for (ConsumerRecord<String, String> record : records) {	
+						if(!recordKey.add(record.key())) continue;
 						log.info("key = {}, value = {}", record.key(), record.value());
 						// System.out.printf("key = %s, value = %s\n", record.key(), record.value());
 						// System.out.printf("offset = %d, value = %s\n",

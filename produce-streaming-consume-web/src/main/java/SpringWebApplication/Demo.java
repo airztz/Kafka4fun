@@ -70,7 +70,7 @@ public class Demo {
 		props.put("metrics.recording.level", "DEBUG");
 		props.put(StreamsConfig.APPLICATION_ID_CONFIG, "streams-analysis");
 		props.put(StreamsConfig.PROCESSING_GUARANTEE_CONFIG, "exactly_once");
-		props.put(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG, "1000");// The frequency with which to save the position of the processor.
+		props.put(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG, "2000");// The frequency with which to save the position of the processor.
 		props.put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, "6");
 		props.put(StreamsConfig.POLL_MS_CONFIG, "100");// The amount of time in milliseconds to block waiting for input.
 		props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, KafkaConfiguration.BrokerURL);
@@ -78,7 +78,8 @@ public class Demo {
 		props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
 
 		// use 1 stream client with 6 threads to analysis
-		KStreamBuilder LogicBuilder = KafkaStreamingLogic.TputByMarket_LogicBuilder(intputTopic, outputTopic);
+		//KStreamBuilder LogicBuilder = KafkaStreamingLogic.TputByMarket_LogicBuilder(intputTopic, outputTopic);
+		KStreamBuilder LogicBuilder = KafkaStreamingLogic.TputByMarket_LogicBuilder_Windowing(intputTopic, outputTopic);
 		KafkaStreams streams1 = new KafkaStreams(LogicBuilder, props);
 		streams1.cleanUp();
 		streams1.start();
@@ -121,6 +122,7 @@ public class Demo {
 		ConsumerRunner1.shutdown();
 		ConsumerRunner2.shutdown();
 		ConsumerRunner3.shutdown();
+		Runtime.getRuntime().addShutdownHook(new Thread(streams1::close));
 	}
 
 	public static void main(String[] args) {

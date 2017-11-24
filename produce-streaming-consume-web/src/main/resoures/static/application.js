@@ -9,10 +9,22 @@ var subscribe_callback = function(currentTput){
 		if(markets[market]!=null){	
 			if(cTput<3000){	
 			    var color_value = '#bf280b';
-				markets[market].addPoint({x:time,y:cTput,color:color_value}, true, true);
+			    if(market!='Colorado'){
+					markets[market].addPoint({x:time,y:cTput,color:color_value}, false, true);
+				}
+				//only need to apply redraw once for every second's new data
+				else{
+					markets[market].addPoint({x:time,y:cTput,color:color_value}, true, true);
+				}	
 		    }
 			else {
-				markets[market].addPoint([time, cTput], true, true);	
+				if(market!='Colorado'){
+					markets[market].addPoint([time, cTput], false, true);
+				}
+				//only need to apply redraw once for every second's new data
+				else{
+					markets[market].addPoint([time, cTput], true, true);
+				}	
 			}
 		}
 }
@@ -49,7 +61,7 @@ var connect_callback = function(frame){
             }
         },
         title: {
-            text: 'Current Video Throughput(Mbps)'
+            text: 'Current Video Throughput(Kbps)'
         },
         xAxis: {
             type: 'datetime',
@@ -80,7 +92,7 @@ var connect_callback = function(frame){
         },
         series: [
         {
-            name: 'Oregon Video Throughput(Mbps)',
+            name: 'Oregon Video Throughput(Kbps)',
             color: '#efeb10',   //yellow
             data: (function () {
                 // generate an array of random data for chart initialization
@@ -98,7 +110,7 @@ var connect_callback = function(frame){
             }())
         },
         {
-            name: 'NYC Manhattan Video Throughput(Mbps)',
+            name: 'NYC Manhattan Video Throughput(Kbps)',
             color: '#0b58bf',   //blue
             data: (function () {
                 // generate an array of random data for chart initialization
@@ -115,7 +127,7 @@ var connect_callback = function(frame){
             }())
         },
         {
-            name: 'Colorado Video Throughput(Mbps)',
+            name: 'Colorado Video Throughput(Kbps)',
             color: '#000000',     //black
             data: (function () {
                 // generate an array of random data for chart initialization
