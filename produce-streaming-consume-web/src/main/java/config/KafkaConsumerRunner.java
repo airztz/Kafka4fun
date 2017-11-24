@@ -21,12 +21,14 @@ public class KafkaConsumerRunner implements Runnable {
 	private final AtomicBoolean closed = new AtomicBoolean(false);
 	private final KafkaConsumer<String, String> consumer;
 	private final Properties props;
-	private final JsonParser Jparser;
+	private final int pull_waitingTime;
+	//private final JsonParser Jparser;
 	private final AtomicBoolean sentToWebSocket;
 	private final Logger log = LoggerFactory.getLogger(KafkaConsumerRunner.class);
 	public KafkaConsumerRunner(Properties props, String topic, boolean sentToWebSocket) {
 		this.props = props;
-		this.Jparser = JsonParserFactory.getJsonParser();
+		this.pull_waitingTime = (int) props.get("auto.commit.interval.ms");
+		//this.Jparser = JsonParserFactory.getJsonParser();
 		consumer = new KafkaConsumer<String, String>(props);
 		consumer.subscribe(Arrays.asList(topic));
 		this.sentToWebSocket = new AtomicBoolean(sentToWebSocket);
@@ -41,7 +43,7 @@ public class KafkaConsumerRunner implements Runnable {
 			// consumer.seek(partition, 0);
 			Set<String> recordKey = new HashSet<String>();
 			while (!closed.get()) {
-				ConsumerRecords<String, String> records = consumer.poll(1000);
+				ConsumerRecords<String, String> records = consumer.poll(pull_waitingTime);
 				if (records.count() > 0) {
 					recordKey.clear();
 					log.info("numbers of record per second = {}",records.count());

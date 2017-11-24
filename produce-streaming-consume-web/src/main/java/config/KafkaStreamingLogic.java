@@ -19,6 +19,7 @@ import org.apache.kafka.streams.kstream.ValueMapper;
 import org.apache.kafka.streams.kstream.Windowed;
 
 public class KafkaStreamingLogic {
+	public static int precessing_interval = 2000;
 	private static final DateFormat Date_Format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 	public static KStreamBuilder TputByMarket_LogicBuilder(String intputTopic, String outputTopic) {
 		final FractionSerializer FractionSerializer = new FractionSerializer();
@@ -110,14 +111,17 @@ public class KafkaStreamingLogic {
 				.groupByKey()
 				.aggregate(()->new Fraction(0, 0.0, 0.0), /* initializer */			
 							(recordKey, recordValue, aggregate)->UDFaggregate(recordKey, recordValue, aggregate),
-							TimeWindows.of(2000L).until(2000L),/* time-based window */
-							FractionSerde)
+							TimeWindows.of(precessing_interval).until(precessing_interval),/* time-based window */
+							FractionSerde,
+						    "tput-stats-store")
 				.mapValues(aggregate->
 								"{\"count\":\"" + aggregate.count + "\", \"UTput\":\""
 								//+ (aggregate.numerator / aggregate.denominator) + "\"}");
 		                         //+ (aggregate.numerator / aggregate.denominator) + "\", \"timestamp\":\"" + Date_Format.format(new Date()) + "\"}");
 								+ (aggregate.numerator / aggregate.denominator) + "\", \"timestamp\":\"" + System.currentTimeMillis() + "\"}");
-		marketUserTput.toStream((recordKey, recordValue) -> recordKey.key())
+		//set stream key
+		marketUserTput.toStream((recordKey, recordValue) -> recordKey.window().start()+recordKey.key())
+		//try to get count: 20/19, which is the end of a window
 		.filter((recordKey, recordValue) -> (recordValue.charAt(11)!='"'&&(recordValue.charAt(10)-'0'==2||recordValue.charAt(11)-'0'>=9)))
 		.to(Serdes.String(), Serdes.String(), outputTopic);
 		return builder;
@@ -152,8 +156,8 @@ public class KafkaStreamingLogic {
 		if (record.length != 0) {
 			EUCELL_DL_TPUT_NUM_KBITS = Double.parseDouble(record[0]);
 			EUCELL_DL_TPUT_DEN_SECS = Double.parseDouble(record[1]);
-		}
-		aggregate.count++;
+			aggregate.count++;
+		}	
 		aggregate.numerator += EUCELL_DL_TPUT_NUM_KBITS;
 		aggregate.denominator += EUCELL_DL_TPUT_DEN_SECS;
 		return aggregate;

@@ -16,6 +16,7 @@ import config.KafkaStreamingLogic;
 public class Demo {
 
 	public static void runDemo(String intputTopic, String outputTopic) throws InterruptedException {
+		
 		// Producer Demo
 		Properties props = new Properties();
 		props.put("bootstrap.servers", KafkaConfiguration.BrokerURL);
@@ -70,7 +71,7 @@ public class Demo {
 		props.put("metrics.recording.level", "DEBUG");
 		props.put(StreamsConfig.APPLICATION_ID_CONFIG, "streams-analysis");
 		props.put(StreamsConfig.PROCESSING_GUARANTEE_CONFIG, "exactly_once");
-		props.put(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG, "2000");// The frequency with which to save the position of the processor.
+		props.put(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG, KafkaStreamingLogic.precessing_interval);// The frequency with which to save the position of the processor.
 		props.put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, "6");
 		props.put(StreamsConfig.POLL_MS_CONFIG, "100");// The amount of time in milliseconds to block waiting for input.
 		props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, KafkaConfiguration.BrokerURL);
@@ -91,7 +92,7 @@ public class Demo {
 		props.put("group.id", "JAVAConsumerGroup1");
 		props.put("session.timeout.ms", "100000");
 		props.put("enable.auto.commit", "true");
-		props.put("auto.commit.interval.ms", "1000");// The frequency in
+		props.put("auto.commit.interval.ms", KafkaStreamingLogic.precessing_interval);// The frequency in
 														// milliseconds that the
 														// consumer offsets are
 														// auto-committed to
@@ -111,6 +112,7 @@ public class Demo {
 		new Thread(ConsumerRunner1).start();
 		new Thread(ConsumerRunner2).start();
 		new Thread(ConsumerRunner3).start();
+		
 		// waiting for producing completion
 		while (ProducerRunner1.getStatus() || ProducerRunner2.getStatus() || ProducerRunner3.getStatus()){
 			TimeUnit.MILLISECONDS.sleep(10 * 1000);
