@@ -107,11 +107,11 @@ public class Demo {
 		boolean sentToWebSocket = true;
 		// sentToWebSocket = false;
 		KafkaConsumerRunner ConsumerRunner1 = new KafkaConsumerRunner(props, outputTopic, sentToWebSocket);
-		//KafkaConsumerRunner ConsumerRunner2 = new KafkaConsumerRunner(props, outputTopic, sentToWebSocket);
-		//KafkaConsumerRunner ConsumerRunner3 = new KafkaConsumerRunner(props, outputTopic, sentToWebSocket);
+		KafkaConsumerRunner ConsumerRunner2 = new KafkaConsumerRunner(props, outputTopic, sentToWebSocket);
+		KafkaConsumerRunner ConsumerRunner3 = new KafkaConsumerRunner(props, outputTopic, sentToWebSocket);
 		new Thread(ConsumerRunner1).start();
-		//new Thread(ConsumerRunner2).start();
-		//new Thread(ConsumerRunner3).start();
+		new Thread(ConsumerRunner2).start();
+		new Thread(ConsumerRunner3).start();
 		
 		// waiting for producing completion
 		while (ProducerRunner1.getStatus() || ProducerRunner2.getStatus() || ProducerRunner3.getStatus()){
@@ -122,8 +122,8 @@ public class Demo {
 		streams1.close();
 		streams1.cleanUp();
 		ConsumerRunner1.shutdown();
-		//ConsumerRunner2.shutdown();
-		//ConsumerRunner3.shutdown();
+		ConsumerRunner2.shutdown();
+		ConsumerRunner3.shutdown();
 		Runtime.getRuntime().addShutdownHook(new Thread(streams1::close));
 	}
 

@@ -52,20 +52,24 @@ public class KafkaProducerRunner implements Runnable {
 		BufferedReader reader = null;
 		try {
 			reader = new BufferedReader(new FileReader(this.source));
+			String[] market_date = this.source.split("_");
 			String line = null;
 			int i = -1;
 			while ((line = reader.readLine()) != null) {
 				int comma = 0, third = 0;
 				if (++i > 0) // skip header
-					while (third++ < line.length()) {
-						if (line.charAt(third) == ',')
-							comma++;
-						if (comma == 3) {
-							String date = line.substring(third - 8, third);
-							this.producer.send(new ProducerRecord<String, String>(this.topic, date, line));
-							break;
-						}
-					}
+//					while (third++ < line.length()) {
+//						if (line.charAt(third) == ',')
+//							comma++;
+//						if (comma == 3) {
+//							String date = line.substring(third - 8, third);
+//							this.producer.send(new ProducerRecord<String, String>(this.topic, date, line));
+//							break;
+//						}
+//						
+//					}
+				
+				this.producer.send(new ProducerRecord<String, String>(this.topic, market_date[0], line));
 				TimeUnit.MILLISECONDS.sleep(100);
 			}
 			this.producer.close();

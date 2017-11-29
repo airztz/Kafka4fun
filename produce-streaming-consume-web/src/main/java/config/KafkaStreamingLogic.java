@@ -115,14 +115,14 @@ public class KafkaStreamingLogic {
 							FractionSerde,
 						    "tput-stats-store")
 				.mapValues(aggregate->
-								"{\"count\":\"" + aggregate.count + "\", \"UTput\":\""
+								"\"count\":\"" + aggregate.count + "\", \"UTput\":\""
 								//+ (aggregate.numerator / aggregate.denominator) + "\"}");
 		                         //+ (aggregate.numerator / aggregate.denominator) + "\", \"timestamp\":\"" + Date_Format.format(new Date()) + "\"}");
 								+ (aggregate.numerator / aggregate.denominator) + "\", \"timestamp\":\"" + System.currentTimeMillis() + "\"}");
 		//set stream key
-		marketUserTput.toStream((recordKey, recordValue) -> recordKey.window().start()+":"+recordKey.window().end()+":"+recordKey.key())
-		//try to get count: 20/19, which is the end of a window
-		//.filter((recordKey, recordValue) -> (recordValue.charAt(11)!='"'&&(recordValue.charAt(10)-'0'==2||recordValue.charAt(11)-'0'>=9)))
+		//marketUserTput.toStream((recordKey, recordValue) -> recordKey.window().start()+":"+recordKey.window().end()+":"+recordKey.key())
+		marketUserTput.toStream((recordKey, recordValue) -> recordKey.window().start()+":"+recordKey.key())
+		.map((recordKey, recordValue) -> new KeyValue<String, String>(recordKey.split(":")[1], "{\"start_time\":\""+recordKey.split(":")[0]+ "\", " + recordValue))
 		.to(Serdes.String(), Serdes.String(), outputTopic);
 		return builder;
 	}

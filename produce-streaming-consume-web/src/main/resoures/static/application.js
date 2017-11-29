@@ -5,7 +5,8 @@ var subscribe_callback = function(currentTput){
 		var data = currentTput.body.split(",");		
 		var market = data[0];
 		var cTput = parseFloat(data[1]);
-		var time = (new Date()).getTime();
+		//var time = (new Date()).getTime();
+		var time = parseInt(data[2], 10);
 		if(markets[market]!=null){	
 			if(cTput<3000){	
 			    var color_value = '#bf280b';

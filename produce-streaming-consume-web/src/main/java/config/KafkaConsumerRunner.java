@@ -54,25 +54,28 @@ public class KafkaConsumerRunner implements Runnable {
 						// System.out.printf("offset = %d, value = %s\n",
 						// record.offset(), record.value());
 						if (this.sentToWebSocket.get()) {
-							String[] keys = record.key().split(":");
-							if (keys.length < 3)
-								continue;
-							String market = keys[2];
+							//String[] keys = record.key().split(":");
+							//if (keys.length < 2)
+							//	continue;
+							//String market = keys[2];
 							//String[] Records = record.value().split(":");
 							//Map<String, Object> JsonMap = Jparser.parseMap(record.value())							
-							long start = Long.valueOf(keys[0]);
+							//long start = Long.valueOf(keys[0]);
+							
+							String market = record.key();				
 							if(!recordKey.containsKey(market)) recordKey.put(market, new TreeMap<Long,String>());
 							TreeMap<Long,String> windows = recordKey.get(market);
-							windows.put(start,record.value());	
+							long window_start = Long.valueOf(record.value().substring(15, 28));
+							windows.put(window_start,record.value());	
 							if(windows.size()>3) {
 								SimpMessagingTemplate template = WSController.getTemplate();
-								long window_start = windows.firstKey();
-								Map<String, Object> JsonMap = Jparser.parseMap(windows.get(window_start));
+								long start = windows.firstKey();
+								Map<String, Object> JsonMap = Jparser.parseMap(windows.get(start));
 								String currentTput = (String) JsonMap.get("UTput");
 								String count = (String) JsonMap.get("count");
-								template.convertAndSend("/topic/currentTput", market + "," +  currentTput);
-								windows.remove(window_start);
-								log.info("start = {}, market = {}, count = {}, value = {}", window_start, market, count, currentTput);
+								template.convertAndSend("/topic/currentTput", market + "," + currentTput + "," +  start);
+								windows.remove(start);
+								log.info("start = {}, market = {}, count = {}, value = {}", start, market, count, currentTput);
 							}
 						}
 					}
