@@ -19,7 +19,7 @@ import org.apache.kafka.streams.kstream.ValueMapper;
 import org.apache.kafka.streams.kstream.Windowed;
 
 public class KafkaStreamingLogic {
-	public static int precessing_interval = 2000;
+	public static int precessing_interval = 1000;
 	private static final DateFormat Date_Format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 	public static KStreamBuilder TputByMarket_LogicBuilder(String intputTopic, String outputTopic) {
 		final FractionSerializer FractionSerializer = new FractionSerializer();
@@ -120,9 +120,9 @@ public class KafkaStreamingLogic {
 		                         //+ (aggregate.numerator / aggregate.denominator) + "\", \"timestamp\":\"" + Date_Format.format(new Date()) + "\"}");
 								+ (aggregate.numerator / aggregate.denominator) + "\", \"timestamp\":\"" + System.currentTimeMillis() + "\"}");
 		//set stream key
-		marketUserTput.toStream((recordKey, recordValue) -> recordKey.window().start()+recordKey.key())
+		marketUserTput.toStream((recordKey, recordValue) -> recordKey.window().start()+":"+recordKey.window().end()+":"+recordKey.key())
 		//try to get count: 20/19, which is the end of a window
-		.filter((recordKey, recordValue) -> (recordValue.charAt(11)!='"'&&(recordValue.charAt(10)-'0'==2||recordValue.charAt(11)-'0'>=9)))
+		//.filter((recordKey, recordValue) -> (recordValue.charAt(11)!='"'&&(recordValue.charAt(10)-'0'==2||recordValue.charAt(11)-'0'>=9)))
 		.to(Serdes.String(), Serdes.String(), outputTopic);
 		return builder;
 	}
@@ -144,7 +144,8 @@ public class KafkaStreamingLogic {
 			else if (comma == 12)
 				break;
 		}
-		String newKey = "Date:" + recordKey + "_Region:" + region + "_Market:" + market;
+		//String newKey = "Date:" + recordKey + "_Region:" + region + "_Market:" + market;
+		String newKey = market;
 		String newRecord = recordValue.substring(runner + 1, recordValue.length());
 		return new KeyValue<String, String>(newKey, newRecord);
 	}
