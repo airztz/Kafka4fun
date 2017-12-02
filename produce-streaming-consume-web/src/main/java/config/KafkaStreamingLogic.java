@@ -111,18 +111,18 @@ public class KafkaStreamingLogic {
 				.groupByKey()
 				.aggregate(()->new Fraction(0, 0.0, 0.0), /* initializer */			
 							(recordKey, recordValue, aggregate)->UDFaggregate(recordKey, recordValue, aggregate),
-							TimeWindows.of(precessing_interval).until(precessing_interval),/* time-based window */
+							TimeWindows.of(precessing_interval).until((long)1.5*precessing_interval),/* time-based window */
 							FractionSerde,
 						    "tput-stats-store")
 				.mapValues(aggregate->
 								"\"count\":\"" + aggregate.count + "\", \"UTput\":\""
-								//+ (aggregate.numerator / aggregate.denominator) + "\"}");
 		                         //+ (aggregate.numerator / aggregate.denominator) + "\", \"timestamp\":\"" + Date_Format.format(new Date()) + "\"}");
-								+ (aggregate.numerator / aggregate.denominator) + "\", \"timestamp\":\"" + System.currentTimeMillis() + "\"}");
+								//+ (aggregate.numerator / aggregate.denominator) + "\", \"timestamp\":\"" + System.currentTimeMillis() + "\"}");
+		+ (aggregate.numerator / aggregate.denominator) + "\"}");
 		//set stream key
-		//marketUserTput.toStream((recordKey, recordValue) -> recordKey.window().start()+":"+recordKey.window().end()+":"+recordKey.key())
 		marketUserTput.toStream((recordKey, recordValue) -> recordKey.window().start()+":"+recordKey.key())
-		.map((recordKey, recordValue) -> new KeyValue<String, String>(recordKey.split(":")[1], "{\"start_time\":\""+recordKey.split(":")[0]+ "\", " + recordValue))
+		//map value
+		.map((recordKey, recordValue) -> new KeyValue<String, String>(recordKey.split(":")[1], "{\"market\":\""+recordKey.split(":")[1]+ "\", " + "\"start_time\":\""+recordKey.split(":")[0]+ "\", " + recordValue))
 		.to(Serdes.String(), Serdes.String(), outputTopic);
 		return builder;
 	}
@@ -144,7 +144,6 @@ public class KafkaStreamingLogic {
 			else if (comma == 12)
 				break;
 		}
-		//String newKey = "Date:" + recordKey + "_Region:" + region + "_Market:" + market;
 		String newKey = market;
 		String newRecord = recordValue.substring(runner + 1, recordValue.length());
 		return new KeyValue<String, String>(newKey, newRecord);

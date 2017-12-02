@@ -37,37 +37,20 @@ public class KafkaConsumerRunner implements Runnable {
 	@Override
 	public void run() {
 		try {
-			// consumer.subscribe(Arrays.asList("test"));
-			// TopicPartition partition = new TopicPartition("test", 0);
-			// consumer.assign(Arrays.asList(partition));
-			// consumer.seek(partition, 0);
 			Map<String, TreeMap<Long,String>> recordKey = new HashMap<String, TreeMap<Long,String>>();
 			while (!closed.get()) {
 				ConsumerRecords<String, String> records = consumer.poll(pull_waitingTime);
 				if (records.count() > 0) {
-					//recordKey.clear();
-					//log.info("numbers of record per second = {}",records.count());
 					for (ConsumerRecord<String, String> record : records) {	
-						//if(!recordKey.add(record.key())) continue;
-						//log.info("key = {}, value = {}", record.key(), record.value());
 						// System.out.printf("key = %s, value = %s\n", record.key(), record.value());
-						// System.out.printf("offset = %d, value = %s\n",
-						// record.offset(), record.value());
 						if (this.sentToWebSocket.get()) {
-							//String[] keys = record.key().split(":");
-							//if (keys.length < 2)
-							//	continue;
-							//String market = keys[2];
-							//String[] Records = record.value().split(":");
-							//Map<String, Object> JsonMap = Jparser.parseMap(record.value())							
-							//long start = Long.valueOf(keys[0]);
-							
 							String market = record.key();				
 							if(!recordKey.containsKey(market)) recordKey.put(market, new TreeMap<Long,String>());
 							TreeMap<Long,String> windows = recordKey.get(market);
-							long window_start = Long.valueOf(record.value().substring(15, 28));
+							int index = record.value().indexOf(',');
+							long window_start = Long.valueOf(record.value().substring(index+16, index+29));
 							windows.put(window_start,record.value());	
-							if(windows.size()>3) {
+							if(windows.size()>2) {
 								SimpMessagingTemplate template = WSController.getTemplate();
 								long start = windows.firstKey();
 								Map<String, Object> JsonMap = Jparser.parseMap(windows.get(start));
