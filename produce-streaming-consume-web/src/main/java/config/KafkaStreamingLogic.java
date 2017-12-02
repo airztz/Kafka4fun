@@ -118,7 +118,7 @@ public class KafkaStreamingLogic {
 								"\"count\":\"" + aggregate.count + "\", \"UTput\":\""
 		                         //+ (aggregate.numerator / aggregate.denominator) + "\", \"timestamp\":\"" + Date_Format.format(new Date()) + "\"}");
 								//+ (aggregate.numerator / aggregate.denominator) + "\", \"timestamp\":\"" + System.currentTimeMillis() + "\"}");
-		+ (aggregate.numerator / aggregate.denominator) + "\"}");
+		+ (aggregate.numerator / aggregate.denominator / 1000) + "\"}");
 		//set stream key
 		marketUserTput.toStream((recordKey, recordValue) -> recordKey.window().start()+":"+recordKey.key())
 		//map value

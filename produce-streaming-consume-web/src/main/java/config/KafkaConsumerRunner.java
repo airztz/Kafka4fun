@@ -42,7 +42,6 @@ public class KafkaConsumerRunner implements Runnable {
 				ConsumerRecords<String, String> records = consumer.poll(pull_waitingTime);
 				if (records.count() > 0) {
 					for (ConsumerRecord<String, String> record : records) {	
-						// System.out.printf("key = %s, value = %s\n", record.key(), record.value());
 						if (this.sentToWebSocket.get()) {
 							String market = record.key();				
 							if(!recordKey.containsKey(market)) recordKey.put(market, new TreeMap<Long,String>());

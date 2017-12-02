@@ -62,7 +62,7 @@ var connect_callback = function(frame){
             }
         },
         title: {
-            text: 'Current Video Throughput(Kbps)'
+            text: 'Current Video Throughput(Mbps)'
         },
         xAxis: {
             type: 'datetime',
