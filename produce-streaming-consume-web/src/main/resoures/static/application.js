@@ -8,7 +8,7 @@ var subscribe_callback = function(currentTput){
 		//var time = (new Date()).getTime();
 		var time = parseInt(data[2], 10);
 		if(markets[market]!=null){	
-			if(cTput<3000){	
+			if(cTput<1.5){	
 			    var color_value = '#bf280b';
 			    if(market!='Colorado'){
 					markets[market].addPoint({x:time,y:cTput,color:color_value}, false, true);

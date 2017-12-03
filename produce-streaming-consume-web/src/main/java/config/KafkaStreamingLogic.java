@@ -111,7 +111,7 @@ public class KafkaStreamingLogic {
 				.groupByKey()
 				.aggregate(()->new Fraction(0, 0.0, 0.0), /* initializer */			
 							(recordKey, recordValue, aggregate)->UDFaggregate(recordKey, recordValue, aggregate),
-							TimeWindows.of(precessing_interval).until((long)1.5*precessing_interval),/* time-based window */
+							TimeWindows.of(precessing_interval).until(precessing_interval+500),/* time-based window */
 							FractionSerde,
 						    "tput-stats-store")
 				.mapValues(aggregate->
