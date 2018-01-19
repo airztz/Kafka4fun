@@ -58,7 +58,10 @@ public class KafkaProducerRunner implements Runnable {
 			while ((line = reader.readLine()) != null) {
 				if (++i > 0) // skip header
 				//partition can be null, and then will be inferred using the key
-					this.producer.send(new ProducerRecord<String, String>(this.topic, null, System.currentTimeMillis(), market_date[0], line));
+					//this.producer.send(new ProducerRecord<String, String>(this.topic, null, System.currentTimeMillis(), market_date[0], line));
+				
+					//Here I set key to null, so message will be sent to partitions in a round-robin fashion
+					this.producer.send(new ProducerRecord<String, String>(this.topic, null, System.currentTimeMillis(), null, line));
 				TimeUnit.MILLISECONDS.sleep(98);
 			}
 			this.producer.close();
