@@ -37,8 +37,10 @@ public class WikipediaFeedAvro_Producer_Consumer {
 
         final Properties props = new Properties();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+        //Use simple StringSerializer for key, it can be KafkaAvroSerializer but not necessary in this case
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
                 StringSerializer.class);
+        //Here we use Kafka Avro Serializer
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
                 io.confluent.kafka.serializers.KafkaAvroSerializer.class);
         props.put(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, schemaRegistryUrl);
@@ -48,8 +50,7 @@ public class WikipediaFeedAvro_Producer_Consumer {
 
         IntStream.range(0, random.nextInt(100))
                 .mapToObj(value -> new WikiFeed(users[random.nextInt(users.length)], true, "content"))
-                .forEach(
-                        record -> producer.send(new ProducerRecord<>(WikipediaFeedAvro_Streaming.WIKIPEDIA_FEED, null, record)));
+                .forEach(record -> producer.send(new ProducerRecord<>(WikipediaFeedAvro_Streaming.WIKIPEDIA_FEED, null, record)));
 
         producer.flush();
     }
